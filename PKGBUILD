@@ -14,11 +14,10 @@ depends=('git')
 makedepends=('git')
 optdepends=('mercurial: use mercurial for version control'
     'bzr: use bazaar for version control')
-source=("$pkgname"::'git://git.kitenet.net/etckeeper'
-    buildsilencer.patch)
+source=("$pkgname"::'git://git.kitenet.net/etckeeper')
 backup=('etc/etckeeper/etckeeper.conf')
-sha256sums=('SKIP'
-            'e8a061fa65b349e6894a45410c4fa8a9a778063b03222cf9198d6f96a61a9a74')
+sha256sums=('SKIP')
+install="${pkgname%%-git}.install"
 
 pkgver() {
   cd "$pkgname"
@@ -31,8 +30,10 @@ pkgver() {
 
 build() {
   cd "$srcdir/$pkgname"
-  patch -Np1 <"$startdir/buildsilencer.patch"
-  # This does not exist, but we do not want the apt stuff installed.
+  # silence the build, especially when bzr is not installed
+  sed -r -i -e 's/^(\s*)(echo|sed|rm|mkdir|cp|-\.)/\1@\2/g' \
+    -e '/etckeeper-bzr/ s@\|\|@2>/dev/null ||@' Makefile 
+  # setup our package manager
   sed -i -e "/^LOWLEVEL_PACKAGE_MANAGER=/ s/=.*/=pacman/" \
       -e "/^HIGHLEVEL_PACKAGE_MANAGER=/ s/=.*/=pacman/" etckeeper.conf
 }
