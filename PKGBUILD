@@ -34,8 +34,12 @@ build() {
   sed -r -i -e 's/^(\s*)(echo|sed|rm|mkdir|cp|-\.)/\1@\2/g' \
     -e '/etckeeper-bzr/ s@\|\|@2>/dev/null ||@' Makefile 
   # setup our package manager
-  sed -i -e "/^LOWLEVEL_PACKAGE_MANAGER=/ s/=.*/=pacman/" \
-      -e "/^HIGHLEVEL_PACKAGE_MANAGER=/ s/=.*/=pacman/" etckeeper.conf
+  sed -r -i -e "/^LOWLEVEL_PACKAGE_MANAGER=/ s/=.*/=pacman/" \
+      -e "/^HIGHLEVEL_PACKAGE_MANAGER=/ s/=.*/=pacman/" \
+      -e "/AVOID_COMMIT_BEFORE_INSTALL/ s/^#//" \
+      -e "/AVOID_DAILY_AUTOCOMMITS=/ s/^#//" etckeeper.conf
+  # also ignore multiple generations of backup files
+  sed -r -i -e "s/(pac(orig|save|new))/\1*/" update-ignore.d/01update-ignore
 }
 
 package() {
