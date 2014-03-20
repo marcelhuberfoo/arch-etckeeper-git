@@ -1,7 +1,8 @@
 post_install() {
-  etckeeper update-ignore
+  etckeeper init
 }
 
 post_upgrade() {
-  post_install
+  # do not fail when .gitignore file is not already managed by etckeeper
+  etckeeper update-ignore || return 0
 }
