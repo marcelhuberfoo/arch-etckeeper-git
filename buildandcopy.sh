@@ -1,7 +1,7 @@
 #!/bin/sh
 
 thedirs="."
-repodir=
+repodir=/home/own-repo
 
 thingsToDo=(
   'for n in $thedirs; do ( cd $n && updpkgsums ;  makepkg --force --noprogressbar --nodeps --nobuild ); done'
