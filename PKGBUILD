@@ -2,7 +2,7 @@
 # Contributor: mathieu.clabaut <mathieu.clabaut@gmail.com>
 
 pkgname=etckeeper-git
-pkgver=1.11.r9.g3dbf7a9
+pkgver=1.13.r0.g0d71505
 pkgrel=1
 pkgdesc="collection of tools to let /etc be stored in a git, hg or bzr repository - git checkout"
 arch=('any')
