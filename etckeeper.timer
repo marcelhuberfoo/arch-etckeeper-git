@@ -1,0 +1,9 @@
+[Unit]
+Description=Daily autocommit of changes in /etc directory
+Documentation=man:etckeeper(8)
+
+[Timer]
+OnCalendar=daily
+
+[Install]
+WantedBy=timers.target

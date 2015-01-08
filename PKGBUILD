@@ -2,7 +2,7 @@
 # Contributor: mathieu.clabaut <mathieu.clabaut@gmail.com>
 
 pkgname=etckeeper-git
-pkgver=1.13.r0.g0d71505
+pkgver=1.17.r11.g4e8fc8c
 pkgrel=1
 pkgdesc="collection of tools to let /etc be stored in a git, hg or bzr repository - git checkout"
 arch=('any')
@@ -13,10 +13,14 @@ conflicts=('etckeeper')
 depends=('git')
 makedepends=('git')
 optdepends=('mercurial: use mercurial for version control'
-    'bzr: use bazaar for version control')
-source=("$pkgname"::'git://git.kitenet.net/etckeeper')
+  'bzr: use bazaar for version control')
+source=("$pkgname"::'git://git.kitenet.net/etckeeper'
+  'etckeeper.service'
+  'etckeeper.timer')
 backup=('etc/etckeeper/etckeeper.conf')
-sha256sums=('SKIP')
+sha256sums=('SKIP'
+            'b92c15e4e2d7211ded184dccf3d4b219031eef4bc5fbe0b8d294e8c0f61195fd'
+            'd69f2cdcc721b7465dd9ae41e27b08eb26252d4eed30d91bd2b800f87be3c5bf')
 install="${pkgname%%-git}.install"
 
 pkgver() {
@@ -30,6 +34,9 @@ pkgver() {
 
 build() {
   cd "$srcdir/$pkgname"
+  # fix python
+  sed -i '/^PYTHON=/c PYTHON=python2' Makefile
+  sed -i '1s/python/python2/' zypper-etckeeper.py
   # silence the build, especially when bzr is not installed
   sed -r -i -e 's/^(\s*)(echo|sed|rm|mkdir|cp|-\.)/\1@\2/g' \
     -e '/etckeeper-bzr/ s@\|\|@2>/dev/null ||@' Makefile 
@@ -46,7 +53,11 @@ package() {
   cd "$srcdir/$pkgname"
 
   make DESTDIR="$pkgdir" install
-  install -D -m0755 debian/cron.daily ${pkgdir}/etc/cron.daily/etckeeper
+
+  # autocommit timer
+  install -D -m0755 debian/cron.daily ${pkgdir}/usr/bin/etckeeper-autocommit
+  install -D -m0644 ${srcdir}/etckeeper.service ${pkgdir}/usr/lib/systemd/system/etckeeper.service
+  install -D -m0644 ${srcdir}/etckeeper.timer ${pkgdir}/usr/lib/systemd/system/etckeeper.timer
 }
 
 # vim: set ft=sh syn=sh ts=2 sw=2 et:
