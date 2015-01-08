@@ -39,7 +39,7 @@ build() {
   sed -i '1s/python/python2/' zypper-etckeeper.py
   # silence the build, especially when bzr is not installed
   sed -r -i -e 's/^(\s*)(echo|sed|rm|mkdir|cp|-\.)/\1@\2/g' \
-    -e '/etckeeper-bzr/ s@\|\|@2>/dev/null ||@' Makefile 
+    -e '/etckeeper-bzr/ s@\|\|@2>/dev/null ||@' Makefile
   # setup our package manager
   sed -r -i -e "/^LOWLEVEL_PACKAGE_MANAGER=/ s/=.*/=pacman/" \
       -e "/^HIGHLEVEL_PACKAGE_MANAGER=/ s/=.*/=pacman/" \
@@ -51,9 +51,7 @@ build() {
 
 package() {
   cd "$srcdir/$pkgname"
-
   make DESTDIR="$pkgdir" install
-
   # autocommit timer
   install -D -m0755 debian/cron.daily ${pkgdir}/usr/bin/etckeeper-autocommit
   install -D -m0644 ${srcdir}/etckeeper.service ${pkgdir}/usr/lib/systemd/system/etckeeper.service
