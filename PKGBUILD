@@ -1,7 +1,7 @@
 # Maintainer: Christian Hesse <mail@eworm.de>
 # Contributor: mathieu.clabaut <mathieu.clabaut@gmail.com>
 
-pkgname=etckeeper-git
+pkgname=blabby-git
 pkgver=1.17.r11.g4e8fc8c
 pkgrel=1
 pkgdesc="collection of tools to let /etc be stored in a git, hg or bzr repository - git checkout"
